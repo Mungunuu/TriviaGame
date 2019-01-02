@@ -1,0 +1,55 @@
+body {
+  background-image: url(https://thumbs.dreamstime.com/z/question-mark-background-blue-white-42270799.jpg);
+}
+
+.container {
+  background-color: whitesmoke;
+  max-width: 960px;
+  align-content: center;
+  position: relative;
+  height: 100%;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 25px;
+}
+p {
+  text-align: center;
+  font-size: 32px;
+}
+.timing {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+.question-section {
+  font-size: 20px;
+  font-family: "PT Serif", serif;
+  background-color: dodgerblue;
+  max-width: 800px;
+  margin: auto;
+  border: 1px solid dodgerblue;
+  padding: 10px;
+  border-radius: 25px;
+}
+
+.answer-options {
+  max-width: 800px;
+  margin: 20px auto;
+}
+.answer {
+  text-align: center;
+  background-color: #ecf0f1;
+  margin: 10px;
+  padding: 5px;
+  border: 1px solid dodgerblue;
+  border-radius: 25px;
+}
+.answer:hover {
+  background-color: #70a1ff;
+}
+.result {
+  text-align: center;
+  margin: 10px;
+  padding: 5px;
+  font-size: 25px;
+}
