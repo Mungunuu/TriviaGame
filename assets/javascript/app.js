@@ -3,6 +3,16 @@ var response
 var correctAnswer
 var currentQuestionIndex = 0
 
+var timeleft = 10
+var downloadTimer = setInterval(function () {
+  document.getElementById('progressBar').value = 10 - --timeleft
+  if (timeleft <= 0) {
+    // timeleft = 10
+    renderResult('Time is up!')
+    currentQuestionIndex++
+  }
+}, 1000)
+
 $.ajax({
   url: queryURL,
   method: 'GET'
@@ -22,11 +32,13 @@ $.ajax({
  */
 
 function renderQuestion () {
+  timeleft = 10
+  $('.giphy-result').empty()
   $('.question-section').empty()
   var question = response.results[currentQuestionIndex].question
-  $('.question-section').text(question)
+  $('.question-section').html(question)
   $('.answer-options').empty()
-  $('.result').empty();
+  $('.result').empty()
   var answers = response.results[currentQuestionIndex].incorrect_answers
   correctAnswer = response.results[currentQuestionIndex].correct_answer
   answers.push(response.results[currentQuestionIndex].correct_answer)
@@ -35,23 +47,20 @@ function renderQuestion () {
     //   console.log(answers[j])
     var answerDiv = $('<div>')
     answerDiv.addClass('answer')
-    answerDiv.text(answers[j])
-    const a = 'asdasd'
+    answerDiv.html(answers[j])
     answerDiv.attr('onclick', "checkAnswer('" + answers[j] + "')")
     $('.answer-options').append(answerDiv)
   }
 }
 
-function renderResult (result) {
+function renderResult (correctOrIncorrect) {
   $('.question-section').empty()
   $('.answer-options').empty()
-  var results = $('<div>');
-  results.addClass('result')
-  $(".result").text(result)
-  results.append('<p>Incorrect: ' + incorrectAnswerPoints + '</p>')
-  results.append('<p>Correct: ' + correctAnswerPoints + '</p>')
-  answerGiphy()
+  $('.question-section').html(correctOrIncorrect + '<br>The correct answer was: ' + correctAnswer)
+  // results.append('<p>Incorrect: ' + incorrectAnswerPoints + '</p>')
+  // results.append('<p>Correct: ' + correctAnswerPoints + '</p>')
 
+  answerGiphy()
   setTimeout(renderQuestion, 3000) // wait 3 seconds before continuing
 }
 
@@ -75,50 +84,17 @@ function checkAnswer (answer) {
     incorrectAnswerPoints++
     renderResult('Incorrect!')
   }
-//   if (currentQuestionIndex >= 9) {
-//     window.location.href = 'result.html?incorrect=' + incorrectAnswerPoints + '&&correct=' + correctAnswerPoints
-//   }
-//   renderQuestion(currentQuestionIndex)
 }
 
 function answerGiphy () {
-    var queryURL = 'https://api.giphy.com/v1/gifs/search?api_key=m24wOx1shF88Z3Im8EwSiRWKgVJPifBF&limit=1&q=' + correctAnswer
-    $.ajax({
-      url: queryURL,
-      method: 'GET'
-    }).then(function (response) {
-      $('#animals-view').empty()
-  
-      for (var i = 0; i < 10; i++) {
-        // console.log(response)
-        // console.log(response.data[i].rating)
-        var animalDiv = $("<div class = 'animal'>")
-        var rating = response.data[i].rating
-        var pOne = $('<p>').text('Rating: ' + rating)
-        animalDiv.append(pOne)
-        var animatedUrl = response.data[i].images.fixed_height.url
-        var stillUrl = response.data[i].images.fixed_height_still.url
-  
-        var image = $('<img>').attr('src', animatedUrl)
-        image.addClass('gif')
-        image.attr('data-state', 'animated')
-  
-        image.attr('data-still', stillUrl)
-        image.attr('data-animated', animatedUrl)
-  
-        image.on('click', function () {
-          var state = $(this).attr('data-state')
-          if (state === 'still') {
-            $(this).attr('src', $(this).attr('data-animated'))
-            $(this).attr('data-state', 'animated')
-          } else {
-            $(this).attr('src', $(this).attr('data-still'))
-            $(this).attr('data-state', 'still')
-          }
-        })
-  
-        animalDiv.append(image)
-        $('#animals-view').prepend(animalDiv)
-      }
-    })
-  }
+  var queryURL = 'https://api.giphy.com/v1/gifs/search?api_key=m24wOx1shF88Z3Im8EwSiRWKgVJPifBF&limit=1&q=' + correctAnswer
+  $.ajax({
+    url: queryURL,
+    method: 'GET'
+  }).then(function (response) {
+    console.log(response)
+    console.log(response.data[0].images.fixed_height_small.url)
+    var giphyImage = $('<img>').attr('src', response.data[0].images.fixed_height.url)
+    $('.giphy-result').html(giphyImage)
+  })
+}
