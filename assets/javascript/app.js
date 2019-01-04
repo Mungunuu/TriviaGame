@@ -9,6 +9,7 @@ var downloadTimer = setInterval(function () {
   if (timeleft <= 0) {
     // timeleft = 10
     renderResult('Time is up!')
+    unAnswered++
     currentQuestionIndex++
   }
 }, 1000)
@@ -35,8 +36,10 @@ function renderQuestion () {
   timeleft = 10
   $('.giphy-result').empty()
   $('.question-section').empty()
+  // renderPoints();
+
   var question = response.results[currentQuestionIndex].question
-  $('.question-section').html(question)
+  $('.question-section').html('Q' + (currentQuestionIndex + 1) + ': ' + question)
   $('.answer-options').empty()
   $('.result').empty()
   var answers = response.results[currentQuestionIndex].incorrect_answers
@@ -52,6 +55,7 @@ function renderQuestion () {
     $('.answer-options').append(answerDiv)
   }
 }
+renderPoints();
 
 function renderResult (correctOrIncorrect) {
   $('.question-section').empty()
@@ -97,4 +101,11 @@ function answerGiphy () {
     var giphyImage = $('<img>').attr('src', response.data[0].images.fixed_height.url)
     $('.giphy-result').html(giphyImage)
   })
+}
+
+function renderPoints () {
+
+  $('.question-section').html('Correct Answers: ' + correctPoints)
+  $('.question-section').append('Incorrect Answers: ' + incorrectAnswerPoints)
+  $('.question-section').append('Unanswered: ' + unAnswered)
 }
